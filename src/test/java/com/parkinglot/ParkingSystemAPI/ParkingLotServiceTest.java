@@ -67,6 +67,10 @@ public class ParkingLotServiceTest {
         Assert.assertEquals(parkingLotService.unParkCar(3), parkingRepository);
         Assert.assertEquals(parkingLotService.unParkCar(3), parkingRepository);
 
+        // test getSlotByRegNum
+        Assert.assertEquals(1, parkingLotService.getSlotOfParkedCar("REG1"));
+        Assert.assertEquals(0, parkingLotService.getSlotOfParkedCar("REG3"));
+
         System.out.println(parkingLotService.getParkingList());
 
     }

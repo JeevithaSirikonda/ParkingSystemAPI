@@ -101,6 +101,14 @@ class ParkingSystemApiApplicationTests {
 				.andExpect(status().isOk()).andReturn();
 		System.out.println("unparking done");
 
+		//test getSlotDetails()
+		MvcResult res = (MvcResult)
+				mockMvc.perform(get("/parking/getSlot")
+				.contentType(MediaType.APPLICATION_JSON)
+				.queryParam("regNumber", String.valueOf("REG1"))).andReturn();
+
+		Assert.assertEquals("1", res.getResponse().getContentAsString());
+
 	}
 
 	@Test
