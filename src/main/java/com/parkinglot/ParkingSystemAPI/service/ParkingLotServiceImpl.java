@@ -3,6 +3,7 @@ package com.parkinglot.ParkingSystemAPI.service;
 import com.parkinglot.ParkingSystemAPI.beans.Car;
 import com.parkinglot.ParkingSystemAPI.beans.Parking;
 import com.parkinglot.ParkingSystemAPI.beans.ParkingRepository;
+import org.assertj.core.internal.bytebuddy.implementation.bytecode.Throw;
 
 import java.util.Map;
 
@@ -20,23 +21,36 @@ public class ParkingLotServiceImpl implements ParkingLotService{
 
     @Override
     public Car parkTheCar(Car car) {
-
-        int availableSlot = getAvailableParkingSlot(parkingRepository);
-        Map<Integer,Car> parkingList = parkingRepository.getParkingList();
-        if(availableSlot > 0){
-
-            for(Map.Entry entry : parkingList.entrySet()){
-                int key = (int) entry.getKey();
-                if(entry.getValue() != null && car.getRegNumber().equalsIgnoreCase(((Car) entry.getValue()).getRegNumber())){
-                    System.out.println("Car already parked in SlotNo: "+ key);
-                    return new Car();
-                }
+        if(car == null){
+            try {
+                throw new MyException("Invalid Car Entry");
+            } catch (MyException e) {
+                System.out.println("Exception: "+e.toString());
             }
-            car.setParkingId(availableSlot);
-            parkingList.put(availableSlot, car);
-            parkingRepository.setParkingList(parkingList);
-            System.out.println("Car parked in Slot: "+availableSlot);
+        }
+        try{
+            int availableSlot = getAvailableParkingSlot(parkingRepository);
+            Map<Integer,Car> parkingList = parkingRepository.getParkingList();
+            if(availableSlot > 0){
 
+                for(Map.Entry entry : parkingList.entrySet()){
+                    int key = (int) entry.getKey();
+                    if(entry.getValue() != null && car.getRegNumber().equalsIgnoreCase(((Car) entry.getValue()).getRegNumber())){
+                        System.out.println("Car with regNum "+car.getRegNumber()+" already parked in SlotNo: "+ key);
+                        throw new MyException("Duplicate Entry: Car with regNum "+car.getRegNumber()+" already parked in SlotNo: "+ key);
+                    }
+                }
+                car.setParkingId(availableSlot);
+                parkingList.put(availableSlot, car);
+                parkingRepository.setParkingList(parkingList);
+                System.out.println("Car parked in Slot: "+availableSlot);
+
+            }
+        } catch(NullPointerException ne){
+            System.out.println(ne.getMessage().toString());
+            ne.printStackTrace();
+        } catch (Exception e){
+            System.out.println(e.getMessage());
         }
 
         return car;
@@ -44,21 +58,21 @@ public class ParkingLotServiceImpl implements ParkingLotService{
 
     @Override
     public ParkingRepository unParkCar(Integer slotNo) {
-        /*for(Map.Entry entry : parkingRepository.getParkingList().entrySet()){
-            if(entry.getKey() == slotNo){
-                entry.setValue(null);
+
+        try{
+            Map<Integer, Car> parkingList = parkingRepository.getParkingList();
+            if(parkingList.containsKey(slotNo)){
+                if(parkingList.get(slotNo) != null){
+                    parkingList.put(slotNo, null);
+                    System.out.println("Unparked Car from slot: "+slotNo);
+                } else{
+                    throw new MyException("Slot "+slotNo+" is already empty");
+                }
             }
-        }*/
-        Map<Integer, Car> parkingList = parkingRepository.getParkingList();
-        if(parkingList.containsKey(slotNo)){
-            if(parkingList.get(slotNo) != null){
-                parkingList.put(slotNo, null);
-                System.out.println("Unparking Car from slot: "+slotNo);
-            } else{
-                System.out.println("Slot "+slotNo+" is already empty");
-            }
+            parkingRepository.setParkingList(parkingList);
+        } catch(NullPointerException | MyException ne){
+            System.out.println("Exception: "+ne.toString());
         }
-        parkingRepository.setParkingList(parkingList);
         return parkingRepository;
     }
 
@@ -71,12 +85,18 @@ public class ParkingLotServiceImpl implements ParkingLotService{
     @Override
     public int getSlotOfParkedCar(String regNumber) {
 
-        for(Map.Entry entry : parkingRepository.getParkingList().entrySet()){
-            int key = (int) entry.getKey();
-            if(entry.getValue() != null && regNumber.equalsIgnoreCase(((Car) entry.getValue()).getRegNumber())){
-                System.out.println("Car "+regNumber+" parked in SlotNo: "+ key);
-                return key;
+        try{
+            for(Map.Entry entry : parkingRepository.getParkingList().entrySet()){
+                int key = (int) entry.getKey();
+                if(entry.getValue() != null && regNumber.equalsIgnoreCase(((Car) entry.getValue()).getRegNumber())){
+                    System.out.println("Car "+regNumber+" parked in SlotNo: "+ key);
+                    return key;
+                } else{
+                    System.out.println("Car with RegNum "+regNumber+" didn't enter ParkingLot");
+                }
             }
+        } catch(NullPointerException ne){
+            System.out.println(ne.getMessage().toString());
         }
         return 0;
     }
