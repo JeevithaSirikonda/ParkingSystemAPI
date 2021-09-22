@@ -37,7 +37,7 @@ public class ParkingLotServiceImpl implements ParkingLotService{
                     int key = (int) entry.getKey();
                     if(entry.getValue() != null && car.getRegNumber().equalsIgnoreCase(((Car) entry.getValue()).getRegNumber())){
                         System.out.println("Car with regNum "+car.getRegNumber()+" already parked in SlotNo: "+ key);
-                        throw new MyException("Duplicate Entry: Car with regNum "+car.getRegNumber()+" already parked in SlotNo: "+ key);
+                        return new Car();
                     }
                 }
                 car.setParkingId(availableSlot);
