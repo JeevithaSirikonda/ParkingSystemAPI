@@ -40,9 +40,8 @@ public class ParkingLotController {
 
     @PostMapping("/park")
     @ResponseBody
-    public Car ParkNewCar(@RequestBody Car car){
-        Car printCar = parkingLotService.parkTheCar(car);
-        return printCar;
+    public Parking ParkNewCar(@RequestBody Car car){
+        return parkingLotService.parkTheCar(car);
     }
 
     @PostMapping("/unpark")

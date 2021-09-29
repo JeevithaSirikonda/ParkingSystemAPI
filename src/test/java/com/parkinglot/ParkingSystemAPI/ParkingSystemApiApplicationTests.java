@@ -91,7 +91,7 @@ class ParkingSystemApiApplicationTests {
 
 		String actualResponse = result.getResponse().getContentAsString();
 		System.out.println(actualResponse);
-		String ExpectedResponse = "{\"regNumber\":\"REG1\",\"color\":\"BLUE\",\"parkingId\":1}";
+		String ExpectedResponse = "{\"parkingId\":1,\"car\":{\"regNumber\":\"REG1\",\"color\":\"BLUE\"}}";
 		Assert.assertEquals(ExpectedResponse, actualResponse);
 
 		//test unpark()

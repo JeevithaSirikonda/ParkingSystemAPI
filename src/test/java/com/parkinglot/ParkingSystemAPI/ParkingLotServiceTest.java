@@ -1,6 +1,7 @@
 package com.parkinglot.ParkingSystemAPI;
 
 import com.parkinglot.ParkingSystemAPI.beans.Car;
+import com.parkinglot.ParkingSystemAPI.beans.Parking;
 import com.parkinglot.ParkingSystemAPI.beans.ParkingRepository;
 import com.parkinglot.ParkingSystemAPI.service.ParkingLotService;
 import com.parkinglot.ParkingSystemAPI.service.ParkingLotServiceImpl;
@@ -52,14 +53,14 @@ public class ParkingLotServiceTest {
     @Test
     public void testParking(){
         parkingRepository = parkingLotService.buildParking(10);
-        Mockito.when(mockParkingLotService.parkTheCar(car1)).thenReturn(car1);
-        Mockito.when(mockParkingLotService.parkTheCar(car2)).thenReturn(car2);
+        Mockito.when(mockParkingLotService.parkTheCar(car1)).thenReturn(new Parking());
+        Mockito.when(mockParkingLotService.parkTheCar(car2)).thenReturn(new Parking());
         //test parking()
-        Assert.assertEquals(parkingLotService.parkTheCar(car1).toString(), new Car("REG1","BLUE").toString());
-        Assert.assertEquals(parkingLotService.parkTheCar(car2).toString(), new Car("REG2","RED").toString());
-        Assert.assertEquals(parkingLotService.parkTheCar(car3).toString(), new Car("REG3","GREEN").toString());
-        Assert.assertEquals(parkingLotService.parkTheCar(car4).toString(), new Car("REG4","BLUE").toString());
-        Assert.assertNotEquals(parkingLotService.parkTheCar(car1).toString(), new Car("REG1","BLUE").toString());
+        Assert.assertEquals(parkingLotService.parkTheCar(car1).toString(), new Parking(1, new Car("REG1","BLUE")).toString());
+        Assert.assertEquals(parkingLotService.parkTheCar(car2).toString(), new Parking(2, new Car("REG2","RED")).toString());
+        Assert.assertEquals(parkingLotService.parkTheCar(car3).toString(), new Parking(3, new Car("REG3","GREEN")).toString());
+        Assert.assertEquals(parkingLotService.parkTheCar(car4).toString(), new Parking(4, new Car("REG4","BLUE")).toString());
+        Assert.assertNotEquals(parkingLotService.parkTheCar(car1).toString(), new Parking(5, new Car("REG1","BLUE")).toString());
         //test unpark()
         Mockito.when(mockParkingLotService.unParkCar(3)).thenReturn(parkingRepository);
         Mockito.when(mockParkingLotService.unParkCar(3)).thenReturn(parkingRepository);

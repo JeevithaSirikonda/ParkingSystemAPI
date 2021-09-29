@@ -7,8 +7,8 @@ import java.util.TreeMap;
 
 public class ParkingRepository {
 
-    private Map<Integer, Car> parkingList;
     private int max_slots;
+    private Map<Integer, Car> parkingList;
 
     public ParkingRepository() {
     }

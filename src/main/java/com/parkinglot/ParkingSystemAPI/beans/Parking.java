@@ -30,5 +30,11 @@ public class Parking {
         this.car = car;
     }
 
-
+    @Override
+    public String toString() {
+        return "{" +
+                "parkingId=" + parkingId +
+                ", car=" + car +
+                '}';
+    }
 }

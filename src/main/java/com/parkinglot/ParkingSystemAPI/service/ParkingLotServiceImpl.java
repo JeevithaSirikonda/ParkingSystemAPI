@@ -20,7 +20,7 @@ public class ParkingLotServiceImpl implements ParkingLotService{
     }
 
     @Override
-    public Car parkTheCar(Car car) {
+    public Parking parkTheCar(Car car) {
         if(car == null){
             try {
                 throw new MyException("Invalid Car Entry");
@@ -37,13 +37,13 @@ public class ParkingLotServiceImpl implements ParkingLotService{
                     int key = (int) entry.getKey();
                     if(entry.getValue() != null && car.getRegNumber().equalsIgnoreCase(((Car) entry.getValue()).getRegNumber())){
                         System.out.println("Car with regNum "+car.getRegNumber()+" already parked in SlotNo: "+ key);
-                        return new Car();
+                        return new Parking();
                     }
                 }
-                car.setParkingId(availableSlot);
+                parking = new Parking(availableSlot, car);
                 parkingList.put(availableSlot, car);
                 parkingRepository.setParkingList(parkingList);
-                System.out.println("Car parked in Slot: "+availableSlot);
+                System.out.println("Parking Token "+parking.toString());
 
             }
         } catch(NullPointerException ne){
@@ -53,7 +53,7 @@ public class ParkingLotServiceImpl implements ParkingLotService{
             System.out.println(e.getMessage());
         }
 
-        return car;
+        return parking;
     }
 
     @Override
@@ -92,7 +92,7 @@ public class ParkingLotServiceImpl implements ParkingLotService{
                     System.out.println("Car "+regNumber+" parked in SlotNo: "+ key);
                     return key;
                 } else{
-                    System.out.println("Car with RegNum "+regNumber+" didn't enter ParkingLot");
+                    System.out.println("Car with RegNum "+regNumber+" is not in ParkingLot");
                 }
             }
         } catch(NullPointerException ne){
